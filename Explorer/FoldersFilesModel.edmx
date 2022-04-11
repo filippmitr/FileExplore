@@ -1,0 +1,202 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="ExplorerModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2012" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityContainer Name="ExplorerModelStoreContainer">
+    <EntitySet Name="FileExtentions" EntityType="ExplorerModel.Store.FileExtentions" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Files" EntityType="ExplorerModel.Store.Files" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Folders" EntityType="ExplorerModel.Store.Folders" store:Type="Tables" Schema="dbo" />
+    <AssociationSet Name="FK_Files_ToExtension" Association="ExplorerModel.Store.FK_Files_ToExtension">
+      <End Role="FileExtentions" EntitySet="FileExtentions" />
+      <End Role="Files" EntitySet="Files" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Files_ToFolder" Association="ExplorerModel.Store.FK_Files_ToFolder">
+      <End Role="Folders" EntitySet="Folders" />
+      <End Role="Files" EntitySet="Files" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="FileExtentions">
+    <Key>
+      <PropertyRef Name="TypeFileId" />
+    </Key>
+    <Property Name="TypeFileId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Type" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Icon" Type="nvarchar(max)" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Files">
+    <Key>
+      <PropertyRef Name="FileId" />
+    </Key>
+    <Property Name="FileId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="varchar" Nullable="false" MaxLength="100" />
+    <Property Name="Description" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Content" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="FolderId" Type="int" Nullable="false" />
+    <Property Name="TypeFileId" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Folders">
+    <Key>
+      <PropertyRef Name="FolderId" />
+    </Key>
+    <Property Name="FolderId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="ParentFolderId" Type="int" Nullable="true" />
+  </EntityType>
+  <Association Name="FK_Files_ToExtension">
+    <End Role="FileExtentions" Type="ExplorerModel.Store.FileExtentions" Multiplicity="1" />
+    <End Role="Files" Type="ExplorerModel.Store.Files" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="FileExtentions">
+        <PropertyRef Name="TypeFileId" />
+      </Principal>
+      <Dependent Role="Files">
+        <PropertyRef Name="TypeFileId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Files_ToFolder">
+    <End Role="Folders" Type="ExplorerModel.Store.Folders" Multiplicity="1" />
+    <End Role="Files" Type="ExplorerModel.Store.Files" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Folders">
+        <PropertyRef Name="FolderId" />
+      </Principal>
+      <Dependent Role="Files">
+        <PropertyRef Name="FolderId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="ExplorerModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="FileExtentions">
+          <Key>
+            <PropertyRef Name="TypeFileId" />
+          </Key>
+          <Property Name="TypeFileId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Type" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Icon" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Files" Relationship="Self.FK_Files_ToExtension" FromRole="FileExtentions" ToRole="Files" />
+        </EntityType>
+        <EntityType Name="Files">
+          <Key>
+            <PropertyRef Name="FileId" />
+          </Key>
+          <Property Name="FileId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Content" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="FolderId" Type="Int32" Nullable="false" />
+          <Property Name="TypeFileId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="FileExtentions" Relationship="Self.FK_Files_ToExtension" FromRole="Files" ToRole="FileExtentions" />
+          <NavigationProperty Name="Folders" Relationship="Self.FK_Files_ToFolder" FromRole="Files" ToRole="Folders" />
+        </EntityType>
+        <EntityType Name="Folders">
+          <Key>
+            <PropertyRef Name="FolderId" />
+          </Key>
+          <Property Name="FolderId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ParentFolderId" Type="Int32" />
+          <NavigationProperty Name="Files" Relationship="Self.FK_Files_ToFolder" FromRole="Folders" ToRole="Files" />
+        </EntityType>
+        <Association Name="FK_Files_ToExtension">
+          <End Role="FileExtentions" Type="Self.FileExtentions" Multiplicity="1" />
+          <End Role="Files" Type="Self.Files" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="FileExtentions">
+              <PropertyRef Name="TypeFileId" />
+            </Principal>
+            <Dependent Role="Files">
+              <PropertyRef Name="TypeFileId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Files_ToFolder">
+          <End Role="Folders" Type="Self.Folders" Multiplicity="1" />
+          <End Role="Files" Type="Self.Files" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Folders">
+              <PropertyRef Name="FolderId" />
+            </Principal>
+            <Dependent Role="Files">
+              <PropertyRef Name="FolderId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="ExplorerEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="FileExtentions" EntityType="Self.FileExtentions" />
+          <EntitySet Name="Files" EntityType="Self.Files" />
+          <EntitySet Name="Folders" EntityType="Self.Folders" />
+          <AssociationSet Name="FK_Files_ToExtension" Association="Self.FK_Files_ToExtension">
+            <End Role="FileExtentions" EntitySet="FileExtentions" />
+            <End Role="Files" EntitySet="Files" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Files_ToFolder" Association="Self.FK_Files_ToFolder">
+            <End Role="Folders" EntitySet="Folders" />
+            <End Role="Files" EntitySet="Files" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+    <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="ExplorerModelStoreContainer" CdmEntityContainer="ExplorerEntities">
+    <EntitySetMapping Name="FileExtentions">
+      <EntityTypeMapping TypeName="IsTypeOf(ExplorerModel.FileExtentions)">
+        <MappingFragment StoreEntitySet="FileExtentions">
+          <ScalarProperty Name="TypeFileId" ColumnName="TypeFileId" />
+          <ScalarProperty Name="Type" ColumnName="Type" />
+          <ScalarProperty Name="Icon" ColumnName="Icon" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Files">
+      <EntityTypeMapping TypeName="IsTypeOf(ExplorerModel.Files)">
+        <MappingFragment StoreEntitySet="Files">
+          <ScalarProperty Name="FileId" ColumnName="FileId" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Description" ColumnName="Description" />
+          <ScalarProperty Name="Content" ColumnName="Content" />
+          <ScalarProperty Name="FolderId" ColumnName="FolderId" />
+          <ScalarProperty Name="TypeFileId" ColumnName="TypeFileId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Folders">
+      <EntityTypeMapping TypeName="IsTypeOf(ExplorerModel.Folders)">
+        <MappingFragment StoreEntitySet="Folders">
+          <ScalarProperty Name="FolderId" ColumnName="FolderId" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="ParentFolderId" ColumnName="ParentFolderId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping></edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="False" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Нет" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

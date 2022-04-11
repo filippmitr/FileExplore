@@ -1,0 +1,41 @@
+﻿<div class="row">
+    <div class="card card-tree">
+        <div class="card-body">
+            <div id="object-children-tree">
+            </div>
+        </div>
+    </div>
+    
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#jstree').jstree({ 
+                "core" : {
+                    "data" : ""
+                }
+            });
+        });
+    </script>
+
+    <div class="card card-content">
+        <div class="card-header">
+            <div class="tabs">
+                <input type="radio" name="tab-btn" id="tab-btn-1" value="" checked>
+                <label for="tab-btn-1">File 1</label>
+                <input type="radio" name="tab-btn" id="tab-btn-2" value="">
+                <label for="tab-btn-2">File 2</label>
+                <input type="radio" name="tab-btn" id="tab-btn-3" value="">
+                <label for="tab-btn-3">File 3</label>
+
+                <div id="content-1">
+                    Content 1
+                </div>
+                <div id="content-2">
+                    Content 2
+                </div>
+                <div id="content-3">
+                    Content 3
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
